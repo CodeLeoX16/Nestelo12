@@ -1,0 +1,79 @@
+<style>
+  .btn-search{
+    background-color: rgb(82, 82, 219);
+    color: white;
+    border-radius: 25px;
+    padding: 0 1rem 0 1rem;
+  }
+  .btn-search:hover{
+    background-color: rgb(82, 82, 219);
+    color: white;
+  }
+  .btn-search i{
+    display: inline;
+    margin-right: 0.9rem;
+
+  }
+  input.search-input {
+    border-radius: 25px !important;
+    padding: 0.5rem 3rem 0.5rem 3rem !important;
+    font-size: 0.8rem !important;
+  }
+</style>
+<nav class="navbar navbar-expand-md bg-white border-bottom shadow-lg sticky-top py-2" style="background: linear-gradient(90deg, #e3ffe6 0%, #f7faff 100%);">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold d-flex align-items-center fs-2" href="/listings" style="letter-spacing:3px; font-family: 'Poppins', 'Segoe UI', Arial, sans-serif; color: #198754; text-shadow: 2px 4px 12px #b7e4c7;">
+      <i class="fa-regular fa-compass me-2 fa-lg" style="color:#0d6efd;"></i>
+      <span style="background: linear-gradient(90deg, #198754 30%, #0d6efd 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent;">
+        Nestelo
+      </span>
+    </a>
+    <button class="navbar-toggler border-0 shadow-none" type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNavAltMarkup">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav d-flex align-items-center">
+        <a class="nav-link px-4 fw-semibold text-dark hover-nav d-flex align-items-center" href="/listings">
+          <i class="fa fa-list me-1 text-success"></i>
+          <span><b>Explore</b></span>
+        </a>
+      </div>
+      <!-- Responsive search form -->
+      <form class="d-flex mx-auto my-2 my-md-0 w-100 justify-content-center" role="search" style="max-width: 400px;">
+        <input class="form-control me-2 search-input" type="search" placeholder="Search Destinations">
+        <button class="btn btn-search" type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+      </form>
+      <!-- End search form -->
+      <div class="navbar-nav ms-auto align-items-center mt-2 mt-md-0">
+        <a class="nav-link px-4 fw-semibold text-white d-flex align-items-center mb-2 mb-md-0"
+          href="/listings/new"
+          style="background: linear-gradient(90deg, #a084e8 0%, #4fc3f7 100%); border-radius: 25px; box-shadow: 0 2px 12px rgba(64,195,247,0.18); padding: 8px 22px; margin-right: 12px; font-size: 1.08rem;">
+          <i class="fa fa-plus-circle me-2" style="font-size: 1.2rem; color: #512da8; text-shadow: 0 2px 8px #a084e8;"></i>
+          <span style="font-weight: 700; letter-spacing: 1px; background: linear-gradient(90deg, #512da8 30%, #598ba5 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent; text-shadow: 0 2px 8px #b3e5fc, 0 1px 0 #0288d1;">
+            Nestelo your place
+          </span>
+        </a>
+        <% if (!currentUser) { %>
+          <a class="nav-link px-4 fw-semibold text-dark hover-nav mb-2 mb-md-0" href="/signup">
+            <i class="fa fa-user-plus me-1 text-info"></i><b>Sign Up</b>
+          </a>
+          <a class="nav-link px-4 fw-semibold text-dark hover-nav mb-2 mb-md-0" href="/login">
+            <i class="fa fa-sign-in-alt me-1 text-primary"></i><b>Login</b>
+          </a>
+        <% } else { %>
+          <span class="nav-link px-4 fw-semibold text-success fs-5 d-flex align-items-center mb-2 mb-md-0" style="background: linear-gradient(90deg, #e0ffe0 0%, #e6f0ff 100%); border-radius: 25px; box-shadow: 0 2px 8px rgba(25,135,84,0.08); padding: 6px 18px; margin-right: 10px;">
+            <i class="fa fa-user-circle me-2 fa-lg" style="color: #0d6efd; text-shadow: 0 2px 8px #b7e4c7;"></i>
+            <span style="font-weight: 600; letter-spacing: 1px; color: #198754;">
+              Hey, <span style="color: #0d6efd;"><%= currentUser.username %></span>
+            </span>
+          </span>
+          <a class="nav-link px-4 fw-semibold text-danger hover-nav mb-2 mb-md-0" href="/logout">
+            <i class="fa fa-sign-out-alt me-1"></i><b>Logout</b>
+          </a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</nav>

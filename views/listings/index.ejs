@@ -1,0 +1,164 @@
+<% layout('layouts/boilerplate') %>
+<style>
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .filter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-right: 2rem;
+    margin-top: 2rem;
+    opacity: 0.8;
+
+  }
+  .filter p{
+    font-size: 0.8rem;
+  }
+  .filter:hover {
+    opacity: 1;
+    cursor: pointer;
+  }
+  .filter div {
+    margin-bottom: 0.3rem;
+  }
+  .tax-info{
+    display: none;
+  }
+
+  .tax-switch {
+    border: 2px solid #0d6efd;
+    border-radius: 2rem;
+    background: linear-gradient(90deg, #e7f1ff 0%, #f8fafc 100%);
+    box-shadow: 0 2px 12px rgba(13,110,253,0.08), 0 1.5px 4px rgba(0,0,0,0.04);
+    height: 3.2rem;
+    padding: 0.8rem 2rem;
+    margin-left: 3rem;
+    display: flex;
+    align-items: center;
+    transition: box-shadow 0.2s, border-color 0.2s;
+  }
+  .tax-switch:hover {
+    box-shadow: 0 4px 18px rgba(13,110,253,0.16), 0 2px 8px rgba(0,0,0,0.08);
+    border-color: #6610f2;
+  }
+  .tax-switch label {
+    font-weight: 600;
+    color: #0d6efd;
+    letter-spacing: 0.5px;
+    margin-left: 0.8rem;
+    font-size: 1.05rem;
+  }
+</style>
+<div class="filters ">
+  <dev class="filter ">
+   <div><i class="fa-solid fa-fire"></i></div> 
+    <p>Trending</p>
+  </dev>
+  
+  <dev class="filter ">
+   <div><i class="fa-solid fa-bed"></i></div> 
+    <p>Rooms</p>
+  </dev>
+  <dev class="filter ">
+   <div><i class="fa-solid fa-city"></i></div> 
+    <p>Iconic cities</p>
+  </dev>
+  
+  <dev class="filter ">
+   <div><i class="fa-solid fa-mountain-sun"></i></div> 
+    <p>Mountains</p>
+  </dev>
+  <dev class="filter ">
+   <div><i class="fa-solid fa-chess-rook"></i></div> 
+    <p>Cstles</p>
+  </dev>
+  <dev class="filter ">
+   <div><i class="fa-solid fa-person-swimming"></i></div> 
+    <p>Amazing Pool</p>
+  </dev>
+  <dev class="filter ">
+   <div><i class="fa-solid fa-tents"></i></div> 
+    <p>Camping</p>
+  </dev>
+  <dev class="filter ">
+   <div><i class="fa-solid fa-tractor"></i></div> 
+    <p>Farms</p>
+  </dev>
+  <dev class="filter ">
+   <div><i class="fa-solid fa-snowflake"></i></div> 
+    <p>Arctic</p>
+  </dev>
+  </dev>
+  <dev class="filter ">
+   <div><i class="fa-solid fa-igloo"></i></div> 
+    <p>Domes</p>
+  </dev>
+  <dev class="filter ">
+   <div><i class="fa-solid fa-sailboat"></i></div> 
+    <p>Boats</p>
+  </dev>
+  <div class="tax-switch">
+    <div class="form-check-reverse form-switch">
+      <input class="form-check-input" 
+      type="checkbox"
+       role="switch" 
+       id="flexSwitchCheckDefault">
+       <label class="form-check-label" for="flexSwitchCheckDefault">Display Rent after Taxes</label>
+    </div>
+  </div>
+
+</div>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mb-4 mt-3">
+  <% for(let listing of alllisting) { %>
+    <div class="col">
+      <div class="card h-100 border-0 shadow-sm listing-card">
+        <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark">
+          <div class="position-relative">
+            <img src="<%= listing.image %>" class="card-img-top rounded-4" alt="listing image" style="height: 250px; object-fit: cover;">
+            <span class="position-absolute top-0 end-0 m-2 badge bg-light text-dark p-2 fs-6" style="opacity: 0.9;">
+              <i class="bi bi-heart"></i>
+            </span>
+          </div>
+          <div class="card-body px-2 py-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <h5 class="card-title mb-0 fw-semibold"><%= listing.title %></h5>
+              <span class="text-warning"><i class="bi bi-star-fill"></i> <%= listing.rating || "4.8" %></span>
+            </div>
+            <p class="card-text text-muted mb-1"><%= listing.location || "India" %></p>
+            <div class="d-flex align-items-center mt-2">
+              <span class="fw-bold fs-5 text-primary me-2">
+              &#8377;<%= listing.price.toLocaleString("en-IN") %>
+              </span>
+              <span class="badge bg-success bg-opacity-25 text-success me-2 tax-info" style="font-size: 0.9rem;">
+              +18% GST
+              </span>
+              <span class="text-muted ms-1" style="font-size: 1.1rem; font-weight: 600; color: #0d6efd; letter-spacing: 0.5px; position: relative; top: 1px; background: #e7f1ff; padding: 2px 8px; border-radius: 8px; box-shadow: 0 1px 4px rgba(13,110,253,0.08); transition: background 0.2s;">
+                / night
+              </span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  <% } %>
+</div>
+
+<script>
+  let priceSwitch = document.getElementById('flexSwitchCheckDefault');
+  priceSwitch.addEventListener('click', ()=> {
+    let taxinfo=document.getElementsByClassName('tax-info');
+    for(info of taxinfo){
+      if(priceSwitch.checked){
+        info.style.display='inline';
+      }else{
+        info.style.display='none';
+      }
+    }
+   }
+  )
+  </script>

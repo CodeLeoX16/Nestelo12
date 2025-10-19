@@ -1,0 +1,168 @@
+body{
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    display:flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: linear-gradient(90deg, #e3ffe6 0%, #f7faff 100%);
+}
+.container{
+    flex:1;
+}
+/* hpmepage */
+.listing-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+}
+.card-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+ /*navbar*/
+
+ .hover-nav:hover {
+    background: #e3ffe6;
+    color: #198754 !important;
+    border-radius: 8px;
+    transition: background 0.3s, color 0.3s;
+  }
+  .navbar-brand {
+    text-shadow: 1px 2px 8px #d1e7dd;
+  }
+/*icon*/
+
+/*options*/
+.nav-link{
+    color:#222222 !important;
+}
+/* footer */
+.f-info-links a{
+    text-decoration:none;
+    color:#222222 ;
+
+}
+.f-info-links a:hover{
+    text-decoration:underline;
+    color:#222222 ;
+
+}
+
+.f-info-links ,
+.f-info__social,
+.f-info-brand{
+    width:100%;
+    /* vertical-align: middle; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.f-info__social i{
+     margin-right: 2rem;
+      font-size: 1.5rem;
+}
+.f-info{
+    text-align: center;
+    display: flex;
+    height: 8rem   ;
+    background-color: #ebebeb;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: space-evenly;
+}
+
+
+/* cards */
+.listing-card{
+    border: none !important;
+    margin-bottom: 2rem;
+    
+
+}
+.card-img-top{
+    border-radius: 1rem !important  ;
+    width: 100% !important;
+    object-fit: cover;
+}
+.card-body{
+    padding: 0rem !important;
+}
+.card-text p{
+    font-weight: 400 !important;
+}
+.listing-link{
+    text-decoration: none !important;
+    color: #222222 !important;
+}
+
+
+/* card effecr */
+.card-img-overlay{
+    opacity: 0;
+}
+.card-img-overlay:hover{
+    opacity: 0.2;
+    background-color: white
+    ;
+}
+
+/* button */
+
+.add-btn ,
+.edit-btn{
+background-color:#fe424d !important;
+border: none !important;
+}
+
+
+/* new page */
+.form-label b {
+    color: #333;
+    letter-spacing: 0.5px;
+}
+input.form-control, textarea.form-control {
+    border-radius: 10px;
+    border: 1px solid #bbb;
+    transition: border-color 0.2s;
+}
+input.form-control:focus, textarea.form-control:focus {
+    border-color: #222;
+    box-shadow: 0 0 0 2px #e0e0e0;
+}
+
+
+/* show page */
+ .btn-gradient-primary {
+        background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
+        color: #fff;
+        border: none;
+        transition: background 0.3s;
+    }
+    .btn-gradient-primary:hover {
+        background: linear-gradient(90deg, #8f94fb 0%, #4e54c8 100%);
+        color: #fff;
+    }
+    .btn-gradient-danger {
+        background: linear-gradient(90deg, #ff5858 0%, #f09819 100%);
+        color: #fff;
+        border: none;
+        transition: background 0.3s;
+    }
+    .btn-gradient-danger:hover {
+        background: linear-gradient(90deg, #f09819 0%, #ff5858 100%);
+        color: #fff;
+    }
+
+
+
+    
+
+    
+

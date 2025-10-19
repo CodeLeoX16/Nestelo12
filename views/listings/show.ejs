@@ -1,0 +1,152 @@
+<% layout('layouts/boilerplate') %>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8 mb-5" style="margin-bottom: 5rem;">
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden" style="margin-left: 3rem;">
+                <div class="position-relative">
+                    <img src="<%= listing.image %>" class="card-img-top rounded-0" alt="listing_image" style="height:350px; object-fit:cover;">
+                    <span class="position-absolute top-0 end-0 m-3 badge bg-gradient bg-success fs-5 shadow">
+                        &#8377;<%= listing.price.toLocaleString("en-IN") %>/night
+                    </span>
+                </div>
+                <div class="card-body p-5">
+                    <h2 class="card-title mb-3 fw-bold text-primary display-5"><%= listing.title %></h2>
+
+                    <p class="card-text text-muted mb-4 fs-5">
+                        <i class="bi bi-person-circle text-primary me-2"></i>
+                        <span class="fw-bold text-primary" style="letter-spacing:1px; font-size:1.2em;">
+                            <%= listing.owner.username %>
+                        </span>
+                    </p>
+                    </p>
+                      <%= listing.description %></p>
+                    <ul class="list-group list-group-flush mb-4">
+                        <li class="list-group-item bg-light">
+                            <i class="bi bi-geo-alt-fill text-danger"></i>
+                            <b>Location:</b> <span class="text-secondary"><%= listing.location %></span>
+                        </li>
+                        <li class="list-group-item bg-light">
+                            <i class="bi bi-globe2 text-info"></i>
+                            <b>Country:</b> <span class="text-secondary"><%= listing.country %></span>
+                        </li>
+                    </ul>
+                     <% if (currentUser && (currentUser._id.toString() === listing.owner._id.toString())) { %> 
+                        
+                    <div class="d-flex gap-3 mb-4">
+                        <a href="/listings/<%= listing._id %>/edit" class="btn btn-primary flex-fill shadow-sm rounded-pill px-4 py-2">
+                            <i class="bi bi-pencil-square"></i> Edit
+                        </a>
+                        <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST" class="flex-fill">
+                            <button type="submit" class="btn btn-danger w-100 shadow-sm rounded-pill px-4 py-2">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+                        </form>
+                    </div>
+                    <%}%>
+                    <% if(currentUser ) { %>
+
+                    <div class="col-12">
+                        <hr>
+                        <h4 class="mb-3 text-secondary"><i class="bi bi-chat-left-text"></i> Leave a Review</h4>
+                        <form action="/listings/<%= listing._id %>/reviews" method="POST" class="bg-light p-4 rounded-4 shadow-sm needs-validation" novalidate>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">
+                                    <i class="bi bi-star-fill text-warning"></i> Rating
+                                </label>
+                                <div class="d-flex align-items-center gap-2" id="star-rating">
+                                    <% for(let i=1; i<=5; i++) { %>
+                                        <input type="radio" class="btn-check" name="review[rating]" id="star<%= i %>" value="<%= i %>" autocomplete="off">
+                                        <label class="star-label" for="star<%= i %>" style="font-size:2rem; cursor:pointer;">
+                                            <i class="bi bi-star"></i>
+                                        </label>
+                                    <% } %>
+                                </div>
+                            </div>
+                            <script>
+                                // Airbnb-like star rating interaction
+                                document.querySelectorAll('#star-rating .star-label').forEach((label, idx, labels) => {
+                                    label.addEventListener('mouseenter', () => {
+                                        labels.forEach((l, i) => {
+                                            l.querySelector('i').className = i <= idx ? 'bi bi-star-fill text-warning' : 'bi bi-star';
+                                        });
+                                    });
+                                    label.addEventListener('mouseleave', () => {
+                                        const checked = document.querySelector('#star-rating input[type="radio"]:checked');
+                                        labels.forEach((l, i) => {
+                                            l.querySelector('i').className = checked && i < checked.value ? 'bi bi-star-fill text-warning' : 'bi bi-star';
+                                        });
+                                    });
+                                    label.addEventListener('click', () => {
+                                        labels.forEach((l, i) => {
+                                            l.querySelector('i').className = i <= idx ? 'bi bi-star-fill text-warning' : 'bi bi-star';
+                                        });
+                                    });
+                                });
+                            </script>
+                            <style>
+                                #star-rating .btn-check { display: none; }
+                                #star-rating .star-label { transition: color 0.2s; }
+                            </style>
+                            <div class="mb-3">
+                                <label for="comment" class="form-label fw-semibold">
+                                    <i class="bi bi-pencil"></i> Comments
+                                </label>
+                                <textarea name="review[comment]" id="comment" cols="30" rows="3" class="form-control rounded-3" placeholder="Share your experience..." required></textarea>
+                                <div class="invalid-feedback">Please add some comments for review
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-success rounded-pill px-4 py-2 shadow">
+                                <i class="bi bi-send"></i> Submit
+                            </button>
+                        </form>
+                        <%}%>
+                        <hr/>
+                        <h4>All Reviews</h4>
+                        <div class="row">  
+                        <% for (let review of listing.reviews) { %>
+                            <div class="col-12 col-md-6 mb-3">
+                                <div class="card h-100 shadow-sm">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center m-2">
+                                            <div class="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center me-2" style="width:36px; height:36px; font-size:1.2em; font-weight:bold;">
+                                                <%= review.author.username.charAt(0).toUpperCase() %>
+                                            </div>
+                                            <h5 class="card-title mb-0"><%= review.author.username %></h5>
+                                        </div>
+                                        <p class="card-text m-2" style="white-space: pre-wrap; word-break: break-word;"><%= review.comment %></p>
+                                        <span class="text-warning m-2">
+                                            <% for(let i=0; i<review.rating; i++) { %>
+                                                <i class="bi bi-star-fill"></i>
+                                            <% } %>
+                                            <% for(let i=review.rating; i<5; i++) { %>
+                                                <i class="bi bi-star"></i>
+                                            <% } %>
+                                        </span>
+                                        
+                                    </div>
+                                    <form class="mb-2 p-3" method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+                                        <button class="btn btn-sm btn-dark">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        <% } %>
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap Icons CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<script>
+    const ratingInput = document.getElementById('rating');
+    const ratingValue = document.getElementById('ratingValue');
+    ratingInput.addEventListener('input', function() {
+        ratingValue.textContent = ratingInput.value;
+    });
+</script>
+
+   

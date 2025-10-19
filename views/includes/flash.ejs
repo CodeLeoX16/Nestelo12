@@ -1,0 +1,31 @@
+<% if(success && success.length) { %>
+    <div class="alert alert-success alert-dismissible fade show col-8 col-md-6 offset-2 offset-md-3 mt-4 shadow-lg rounded-4 border-0 animate__animated animate__fadeInDown" role="alert" style="background: linear-gradient(90deg, #d4fc79 0%, #96e6a1 100%);">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-check-circle-fill me-3 fs-2"></i>
+            <div>
+                <% if(Array.isArray(success)) { success.forEach(function(msg) { %>
+                    <div class="fw-semibold"><%= msg %></div>
+                <% }) } else { %>
+                    <span class="fw-semibold"><%= success %></span>
+                <% } %>
+            </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<% } %>
+
+<% if(error && error.length) { %>
+    <div class="alert alert-danger alert-dismissible fade show col-8 col-md-6 offset-2 offset-md-3 mt-4 shadow-lg rounded-4 border-0 animate__animated animate__fadeInDown" role="alert" style="background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-exclamation-triangle-fill me-3 fs-2"></i>
+            <div>
+                <% if(Array.isArray(error)) { error.forEach(function(msg) { %>
+                    <div class="fw-semibold"><%= msg %></div>
+                <% }) } else { %>
+                    <span class="fw-semibold"><%= error %></span>
+                <% } %>
+            </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<% } %>

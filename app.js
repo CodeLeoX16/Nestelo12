@@ -6,122 +6,115 @@ const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 const ExpressError = require('./utility/expressError.js');
 const listingRoutes = require('./Routes/listing.js');
-const reviewRoutes = require('./Routes/review.js');
-const userRoutes = require('./Routes/user.js');
+const review = require('./Routes/review.js');
 const session = require('express-session');
-const MongoStore = require('connect-mongo');
+const MongoStore = require('connect-mongo'); // For session storage in MongoDB
 const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user.js');
-require('dotenv').config();
+const userRoutes = require('./Routes/user.js');
+require('dotenv').config(); 
 
-// -------------------- DATABASE CONNECTION --------------------
-const dbUrl = process.env.ATLASDB_URL;
+const dbUrl=process.env.ATLASDB_URL; 
+// const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 
-if (!dbUrl) {
-  console.error("❌ Missing MongoDB connection string! Please set ATLASDB_URL in environment variables.");
-  process.exit(1);
-}
+// Global error logging for debugging
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+}); 
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection:', reason);
+});
+ 
+  
+main()
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 async function main() {
   try {
     await mongoose.connect(dbUrl);
-    console.log("✅ Connected to MongoDB");
   } catch (err) {
-    console.error("❌ Failed to connect to MongoDB:", err);
+    console.error("Failed to connect to MongoDB:", err);
     process.exit(1);
   }
 }
-main();
 
-// -------------------- VIEW ENGINE SETUP --------------------
-app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-
-// -------------------- MIDDLEWARE --------------------
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname, 'public')));
 
-// -------------------- SESSION CONFIG --------------------
-const secret = process.env.SECRET || 'fallbacksecret';
-
 const store = MongoStore.create({
-  mongoUrl: dbUrl,
-  crypto: {
-    secret,
+  mongoUrl:dbUrl,
+  crypto:{
+    secret: process.env.SECRET,
   },
-  touchAfter: 24 * 3600, // update every 24h
-});
+  touchAfter: 24 * 3600, // time in seconds after which session will be updated
 
-store.on('error', (e) => {
+});
+store.on('error', function(e) {
   console.log('Session Store Error', e);
 });
 
-const sessionOptions = {
-  store,
-  secret,
-  resave: false,
-  saveUninitialized: true,
+const sessionOptions={
+  store: store,
+  secret: process.env.SECRET, // Use environment variable for secret
+  resave:false,
+  saveUninitialized:true,
   cookie: {
-    expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // 7 days
-    maxAge: 1000 * 60 * 60 * 24 * 7,
-    httpOnly: true,
-  },
+    expires: Date.now() + 7 * 24 * 60 * 1000, // 7 day
+    maxAge: 7 * 24 * 60 * 1000, // 7 day
+    history: true, // Enable history tracking
+  }
+
 };
 
-app.use(session(sessionOptions));
-app.use(flash());
+// app.get('/', (req, res) => {
+//   res.send("i am root");
+// });
 
-// -------------------- PASSPORT CONFIG --------------------
+
+
+app.use(session(sessionOptions));
+app.use(flash());//atfirst always flash then use it in routes
+
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+passport.deserializeUser(User.deserializeUser()); 
 
-// -------------------- GLOBAL VARIABLES --------------------
 app.use((req, res, next) => {
-  res.locals.currentUser = req.user || null; // ✅ Always define currentUser
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
+  res.locals.currentUser = req.user; // Make currentUser available in all templates
   next();
 });
-
-// -------------------- ROUTES --------------------
+ 
 app.use('/listings', listingRoutes);
-app.use('/listings/:id/reviews', reviewRoutes);
+app.use('/listings/:id/reviews', review);
 app.use('/', userRoutes);
 
-// -------------------- HOME ROUTE --------------------
-app.get('/', (req, res) => {
-  res.render('home'); // make sure 'views/home.ejs' exists
-});
-
-// -------------------- 404 HANDLER --------------------
-app.all('*', (req, res, next) => {
+// 404 Route Handler
+app.use((req, res, next) => {
   next(new ExpressError('Page Not Found', 404));
 });
 
-// -------------------- ERROR HANDLER --------------------
+// Error-handling middleware (must have 4 arguments)
 app.use((err, req, res, next) => {
-  const { statusCode = 500 } = err;
-  if (!err.message) err.message = 'Something went wrong!';
-  res.status(statusCode).render('error.ejs', { message: err.message });
+  const { statusCode = 500, message = 'Something went wrong' } = err;
+  //res.status(statusCode).send(message);
+  res.status(statusCode).render("error.ejs",{message})
 });
 
-// -------------------- SERVER START --------------------
-const port = process.env.PORT || 8080;
-app.listen(port, () => {
-  console.log(`🚀 Server running on port ${port}`);
-});
-
-// -------------------- GLOBAL ERROR LOGGING --------------------
-process.on('uncaughtException', (err) => {
-  console.error('Uncaught Exception:', err);
-});
-process.on('unhandledRejection', (reason) => {
-  console.error('Unhandled Rejection:', reason);
-});
+app.listen(8080, () => {
+  console.log("Server is running on port 8080");
+}); 
